@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: demo
+  main:
+    allow-circular-references: true
+  mongodb:
+    host: localhost
+    port: 27017
+    database: fashion_forecasting
+
+server:
+  port: 8080
+security:
+  jwt:
+    secretKey: dfb3f97cb2b2c23a9f5aa538fae158008bf5c02ef41964d3c748eef74b970e00
+    accessTokenExpiration: 900
+    refreshTokenExpiration: 604800
+client:
+  url: http://localhost:5173

@@ -1,11 +1,11 @@
-package com.backend.fashion_trend.dto;
+package com.backend.fashion_trend.dtos;
 
 import lombok.Data;
 
 import java.util.Map;
 
 @Data
-public class TrendSegmentDTO {
+public class TrendSegmentResponse {
     // These fields MUST match the keys in your Flask JSON output
     private int id;
     private String title;
