@@ -1,18 +1,45 @@
 package com.backend.fashion_trend.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.Map;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TrendSegmentResponse {
-    // These fields MUST match the keys in your Flask JSON output
     private int id;
     private String title;
     private String subtitle;
-    private String buying_focus;
 
-    // "stats" is a nested object in JSON, so we use a Map in Java
-    // Example: "stats": { "emergence_score": 8.8, ... }
-    private Map<String, Object> stats;
+    // Maps "buying_focus" (Python) -> "buyingFocus" (Java)
+    @JsonProperty("buying_focus")
+    private String buyingFocus;
+
+    // Nested Stats Object
+    private TrendStats stats;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TrendStats {
+        @JsonProperty("member_count")
+        private int memberCount;
+
+        @JsonProperty("emergence_score")
+        private double emergenceScore;
+
+        private String status;
+
+        // --- NEW FIELDS FROM AI MODEL ---
+        @JsonProperty("sentiment_score")
+        private double sentimentScore;
+
+        @JsonProperty("sentiment_label")
+        private String sentimentLabel;
+
+        @JsonProperty("predicted_growth")
+        private String predictedGrowth;
+    }
 }
