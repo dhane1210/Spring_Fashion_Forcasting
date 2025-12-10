@@ -13,17 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/trends")
-@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*") // Allows your frontend to connect
 public class TrendController {
 
     private final TrendService trendService;
 
     @GetMapping("/all")
     public ResponseEntity<@NotNull List<TrendSegmentResponse>> getAllTrends() {
+        // 1. Fetch from AI Service
         List<TrendSegmentResponse> trends = trendService.getTrendsFromAI();
+
+        // 2. Return JSON to Frontend
         return ResponseEntity.ok(trends);
     }
 }

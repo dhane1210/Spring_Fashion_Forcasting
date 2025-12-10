@@ -1,35 +1,41 @@
 package com.backend.fashion_trend.services;
 
 import com.backend.fashion_trend.dtos.TrendSegmentResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class TrendService {
 
+    // URL of your Flask AI Microservice
+    private final String FLASK_API_URL = "http://localhost:5001/get_all_trends";
     private final RestTemplate restTemplate = new RestTemplate();
 
     public List<TrendSegmentResponse> getTrendsFromAI() {
         try {
-            System.out.println("--- JAVA: Calling Flask AI Model... ---");
+            log.info("📡 Connecting to AI Brain at: {}", FLASK_API_URL);
 
-            // 1. Make the HTTP GET request to Python
-            // The URL of your running Flask "Brain"
-            String FLASK_API_URL = "http://localhost:5001/get_all_trends";
+            // Call Python/Flask API
             TrendSegmentResponse[] response = restTemplate.getForObject(FLASK_API_URL, TrendSegmentResponse[].class);
 
-            System.out.println("--- JAVA: Received " + response.length + " segments from AI ---");
-
-            // 2. Convert array to List and return
-            return Arrays.asList(response);
+            if (response != null) {
+                log.info("✅ Success! Received {} AI segments.", response.length);
+                return Arrays.asList(response);
+            } else {
+                log.warn("⚠️ AI returned empty response.");
+                return Collections.emptyList();
+            }
 
         } catch (Exception e) {
-            // If Python is down, print error and return empty list (or throw exception)
-            System.err.println("!!! ERROR: Could not connect to Flask. Is python app.py running? !!!");
-            e.printStackTrace();
+            log.error("❌ ERROR: Could not connect to Flask AI. Is 'python app.py' running? Details: {}", e.getMessage());
             throw new RuntimeException("Backend AI Service Unreachable");
         }
     }

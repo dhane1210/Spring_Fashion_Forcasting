@@ -44,19 +44,21 @@ public class SecurityConfig {
                                         "/swagger-ui.html"
                                 ).permitAll()
                                 .requestMatchers("/gs-guide-websocket/**").permitAll()
+                                .requestMatchers("/segments/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(config -> {
-                    config.accessDeniedHandler(
-                            (_, response, _) ->
-                                    response.setStatus(HttpStatus.FORBIDDEN.value()));
-                    config.authenticationEntryPoint(
-                            (_, response, _) ->
-                                    response.setStatus(HttpStatus.UNAUTHORIZED.value()));
+                    config.accessDeniedHandler((req, res, exc) -> {
+                        res.setStatus(HttpStatus.FORBIDDEN.value());
+                    });
+                    config.authenticationEntryPoint((req, res, exc) -> {
+                        res.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    });
                 })
+
                 .build();
     }
 
