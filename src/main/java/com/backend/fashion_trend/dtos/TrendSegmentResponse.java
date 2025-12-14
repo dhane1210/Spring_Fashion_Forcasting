@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -15,11 +14,9 @@ public class TrendSegmentResponse {
     private String title;
     private String subtitle;
 
-    // Maps "buying_focus" (Python) -> "buyingFocus" (Java)
     @JsonProperty("buying_focus")
     private String buyingFocus;
 
-    // Nested Stats Object
     private TrendStats stats;
 
     @Data
@@ -34,7 +31,6 @@ public class TrendSegmentResponse {
 
         private String status;
 
-        // --- NEW FIELDS FROM AI MODEL ---
         @JsonProperty("sentiment_score")
         private double sentimentScore;
 

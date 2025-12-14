@@ -1,5 +1,7 @@
 package com.backend.fashion_trend.services;
 
+import com.backend.fashion_trend.dtos.PredictionRequest;
+import com.backend.fashion_trend.dtos.PredictionResponse;
 import com.backend.fashion_trend.dtos.TrendSegmentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,28 +17,32 @@ import java.util.List;
 @Slf4j
 public class TrendService {
 
-    // URL of your Flask AI Microservice
-    private final String FLASK_API_URL = "http://localhost:5001/get_all_trends";
+    private final String FLASK_BASE_URL = "http://localhost:5001";
     private final RestTemplate restTemplate = new RestTemplate();
 
     public List<TrendSegmentResponse> getTrendsFromAI() {
         try {
-            log.info("📡 Connecting to AI Brain at: {}", FLASK_API_URL);
-
-            // Call Python/Flask API
-            TrendSegmentResponse[] response = restTemplate.getForObject(FLASK_API_URL, TrendSegmentResponse[].class);
-
+            String url = FLASK_BASE_URL + "/get_all_trends";
+            log.info("Fetching trends from: {}", url);
+            TrendSegmentResponse[] response = restTemplate.getForObject(url, TrendSegmentResponse[].class);
             if (response != null) {
-                log.info("✅ Success! Received {} AI segments.", response.length);
                 return Arrays.asList(response);
-            } else {
-                log.warn("⚠️ AI returned empty response.");
-                return Collections.emptyList();
             }
-
+            return Collections.emptyList();
         } catch (Exception e) {
-            log.error("❌ ERROR: Could not connect to Flask AI. Is 'python app.py' running? Details: {}", e.getMessage());
-            throw new RuntimeException("Backend AI Service Unreachable");
+            log.error("Flask API Error: {}", e.getMessage());
+            throw new RuntimeException("AI Service Unreachable");
+        }
+    }
+
+    public PredictionResponse predictUserSegment(PredictionRequest request) {
+        try {
+            String url = FLASK_BASE_URL + "/predict";
+            log.info("Sending prediction request for: {}", request.getText());
+            return restTemplate.postForObject(url, request, PredictionResponse.class);
+        } catch (Exception e) {
+            log.error("Flask Prediction Error: {}", e.getMessage());
+            throw new RuntimeException("AI Prediction Failed");
         }
     }
 }

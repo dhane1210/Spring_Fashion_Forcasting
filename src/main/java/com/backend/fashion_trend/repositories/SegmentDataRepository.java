@@ -4,6 +4,7 @@ import com.backend.fashion_trend.entities.SegmentData;
 import com.backend.fashion_trend.dtos.MonthCount;
 import com.backend.fashion_trend.dtos.YearCount;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -27,4 +28,5 @@ public interface SegmentDataRepository extends MongoRepository<@NotNull SegmentD
             "{ $sort: { year: 1 } }"
     })
     List<YearCount> getYearlyCounts(int segmentId, int topicId);
+    List<SegmentData> findAllByOrderByTimestampDesc(Pageable pageable);
 }

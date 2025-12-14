@@ -4,6 +4,7 @@ import com.backend.fashion_trend.dtos.MonthCount;
 import com.backend.fashion_trend.dtos.SegmentRequest;
 import com.backend.fashion_trend.dtos.SegmentResponse;
 import com.backend.fashion_trend.dtos.YearCount;
+import com.backend.fashion_trend.entities.SegmentData;
 import com.backend.fashion_trend.services.SegmentDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,16 @@ public class SegmentDataController {
     ) {
         var segmentDtoList = segmentDataService.addSegmentData(segmentData);
         return ResponseEntity.status(HttpStatus.CREATED).body(segmentDtoList);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<SegmentData>> getAllSegments() {
+        return ResponseEntity.ok(segmentDataService.getAllSegments());
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<SegmentData>> getRecentActivity() {
+        return ResponseEntity.ok(segmentDataService.getRecentActivity());
     }
 
 }
